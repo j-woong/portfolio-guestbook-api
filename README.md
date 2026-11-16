@@ -2,13 +2,14 @@
 
 포트폴리오 사이트([지웅 숲공원](https://portfolio-chi-gold-99.vercel.app))의 방명록을 저장하는 Spring Boot API입니다.
 로그인 없이 닉네임과 한 줄 메시지를 남길 수 있고, 도배를 막기 위해 같은 방문자는 30초에 한 번만 쓸 수 있습니다.
+같은 시간에 접속한 방문자들이 공원에서 서로를 볼 수 있도록 위치를 중계하는 WebSocket도 제공합니다.
 
 ## 기술 스택
 
 | 구분 | 기술 |
 |---|---|
 | 언어 | Java 25 |
-| 프레임워크 | Spring Boot 4.1.2, Spring MVC |
+| 프레임워크 | Spring Boot 4.1.2, Spring MVC, WebSocket |
 | 데이터 접근 | Spring Data JPA |
 | 데이터베이스 | H2(로컬), MariaDB(배포) |
 | 배포 | Docker, CloudType |
@@ -21,6 +22,7 @@
 | POST | `/api/guestbook` | 글 작성 `{nickname, message, foundCat}` | 201, 검증 실패 400, 연속 작성 429 |
 | DELETE | `/api/guestbook/{id}` | 글 삭제. `X-Admin-Key` 헤더 필요 | 204, 키 불일치 403, 없는 글 404 |
 | GET | `/api/health` | 서버 상태 확인 | 200 |
+| WebSocket | `/ws/park` | 접속한 방문자들의 위치 중계 (최대 30명) | 가득 차면 종료 코드 4001 |
 
 에러 응답은 모두 `{"message": "...", "errors": {필드: 메시지}}` 형식이며, `errors`는 입력값 검증 실패일 때만 포함됩니다.
 
@@ -55,3 +57,4 @@ curl localhost:8080/api/guestbook
 - [02. 목록 조회와 글 작성](docs/02-list-and-create.md)
 - [03. 도배 방지와 관리자 삭제](docs/03-rate-limit-and-admin.md)
 - [04. 예외 처리와 CORS](docs/04-errors-and-cors.md)
+- [05. 함께 걷기 (멀티플레이)](docs/05-multiplayer.md)
